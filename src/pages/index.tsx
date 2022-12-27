@@ -1,40 +1,27 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { useQuery } from "@tanstack/react-query";
-import Moralis from "moralis";
-import { EvmChain } from "@moralisweb3/common-evm-utils";
 
-import { trpc } from "../utils/trpc";
 import { Layout } from "../components";
 import { useSession } from "next-auth/react";
-
-const getAnitoNfts = async (address: string) => {
-  const anitoAddress = "0x4aD7D646Dc0b25f3048d18355bC1dF338FaCF59D";
-
-  const response = await Moralis.EvmApi.nft.getWalletNFTs({
-    address,
-    chain: EvmChain.BSC,
-    tokenAddresses: [anitoAddress],
-  });
-
-  return response;
-};
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
 
-  const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
-  useQuery({
-    queryKey: ["anito-balance"],
-    queryFn: () => getAnitoNfts(session!.user!.name),
-    enabled: Boolean(session?.user?.name),
-  });
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated" && session?.user?.name) {
+      router.replace(`/p/${session.user.name}`);
+    }
+  }, [router, status, session?.user?.name]);
 
   return (
     <Layout>
       <Head>
-        <title>Atlas</title>
-        <meta name="description" content="Your web3 gaming score" />
+        <title>Playdex Atlas</title>
+        <meta name="description" content="Your Web 3.0 gaming score" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div></div>
