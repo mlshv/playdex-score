@@ -13,7 +13,7 @@ initMoralis();
 
 const wagmiClient = createClient(
   getDefaultClient({
-    appName: "Atlas",
+    appName: "Playdex Score",
     alchemyId: clientEnv.NEXT_PUBLIC_ALCHEMY_API_KEY,
   })
 );

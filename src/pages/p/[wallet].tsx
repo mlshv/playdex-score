@@ -1,7 +1,11 @@
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import { InventoryItem, Layout } from "../../components";
+import { useState } from "react";
+import { NftCard, Layout, Inventory } from "../../components";
+import { tokenContracts } from "../../server/constants";
+import type { NFTMetadata } from "../../types";
 import { trpc } from "../../utils/trpc";
 
 const ProfilePage = () => {
@@ -19,43 +23,89 @@ const ProfilePage = () => {
       return <div>Loading...</div>;
     }
 
+    if (!profile.data.score) {
+      return (
+        <div className="mx-auto max-w-[400px] px-8">
+          <Image src="/empty-state.svg" alt="" width="377" height="236" />
+          <h1 className="text-lg font-medium">
+            Oops... We can’t find any activity on this wallet
+          </h1>
+
+          <p className="mt-3 text-sm text-[#989DB3]">
+            For now count ownership and transfer of NFTs in&nbsp;these Web 3.0
+            games:
+            <ul className="mt-2">
+              {Object.values(tokenContracts).map((contract) => (
+                <li key={contract.address}>- {contract.name}</li>
+              ))}
+            </ul>
+          </p>
+        </div>
+      );
+    }
+
     return (
       <div>
-        <h1 className="text-3xl">Profile {wallet}</h1>
-        <h2 className="text-2xl">Score: {profile.data?.score}</h2>
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#232430]">
+            <Image src="/points.svg" alt="" width="24" height="24" />
+          </div>
+          <h2>
+            <span className="text-[36px]">{profile.data?.score}</span>{" "}
+            <span className="text-sm text-[#989DB3]">points</span>
+          </h2>
+        </div>
 
-        {profile.data.actions.length > 0 && (
-          <>
-            <h2 className="mt-8 text-2xl">Actions</h2>
-            <table>
-              <thead>
-                <tr>
-                  <td>Action</td>
-                  <td>Score</td>
-                </tr>
-              </thead>
-              <tbody>
-                {profile.data.actions.map((action, i) => (
-                  <tr key={i}>
-                    <td>{action.title}</td>
-                    <td>+{action.score}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </>
-        )}
+        <div className="gap-20 md:mt-6 md:flex">
+          {profile.data.actions.length > 0 && (
+            <div className="flex-1">
+              <h2 className="mt-8 text-xl font-medium md:mt-0">Actions</h2>
 
-        {profile.data.ownedTokens.length > 0 && (
-          <>
-            <h2 className="text-2xl">Inventory</h2>
-            {profile.data.ownedTokens
-              .filter((token) => token.metadata)
-              .map((token, i) => (
-                <InventoryItem token={token} key={i} />
-              ))}
-          </>
-        )}
+              <div className="mt-4 flex w-full flex-col gap-4">
+                {profile.data.actions.map((action, i) => {
+                  const metadata = action.tokenMetadata as unknown as
+                    | NFTMetadata
+                    | undefined;
+
+                  return (
+                    <div
+                      className="flex items-center justify-between gap-2"
+                      key={i}
+                    >
+                      <div className="flex items-center gap-3">
+                        {metadata?.image && (
+                          <div className="aspect-square h-10 w-10 rounded-lg overflow-hidden bg-[#1D1C2D]">
+                            <img
+                              src={metadata.image}
+                              alt={metadata.name}
+                              className=""
+                            />
+                          </div>
+                        )}
+                        <div>
+                          <div>{action.title}</div>
+                          <div className="text-sm text-[#989DB3]">
+                            {
+                              {
+                                nft_transfer: "Transfer",
+                                nft_ownership: "Ownership",
+                              }[action.type]
+                            }
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-[#33FFB6]">+{action.score}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {Object.keys(profile.data.ownedTokens).length > 0 && (
+            <Inventory ownedTokens={profile.data.ownedTokens} />
+          )}
+        </div>
       </div>
     );
   };
@@ -63,7 +113,7 @@ const ProfilePage = () => {
   return (
     <Layout>
       <Head>
-        <title>Playdex Atlas</title>
+        <title>Playdex Score</title>
         <meta name="description" content="Your Web 3.0 gaming score" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
