@@ -10,7 +10,7 @@ export function Layout({ children }: Props) {
       <img
         src="/bg1440x900.svg"
         alt=""
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 z-[-1]"
       />
       <Header />
       <main className="mt-6">{children}</main>
