@@ -1,6 +1,6 @@
+import { ConnectKitButton } from "connectkit";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { ConnectWallet } from "./ConnectWallet";
 import { PlaydexLogo } from "./PlaydexLogo";
 
 export function Header() {
@@ -12,7 +12,7 @@ export function Header() {
         <Link href={session?.address ? `/p/${session.address}` : "/"}>
           <PlaydexLogo />
         </Link>
-        <ConnectWallet />
+        <ConnectKitButton />
       </div>
     </header>
   );

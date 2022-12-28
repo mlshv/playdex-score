@@ -5,18 +5,19 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
-import { ConnectWallet, Layout, PlaydexLogo } from "../components";
+import { PlaydexLogo } from "../components";
+import { ConnectKitButton } from "connectkit";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
 
-  // const router = useRouter();
+  const router = useRouter();
 
-  // useEffect(() => {
-  //   if (status === "authenticated" && session?.user?.name) {
-  //     router.replace(`/p/${session.user.name}`);
-  //   }
-  // }, [router, status, session?.user?.name]);
+  useEffect(() => {
+    if (status === "authenticated" && session?.user?.name) {
+      router.replace(`/p/${session.user.name}`);
+    }
+  }, [router, status, session?.user?.name]);
 
   return (
     <>
@@ -26,7 +27,11 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="relative flex h-screen items-center justify-center overflow-hidden">
-        <img src="/bg.svg" alt="" className="pointer-events-none absolute" />
+        <img
+          src="/bg.svg"
+          alt=""
+          className="pointer-events-none absolute z-[-1]"
+        />
         <div
           className={cn(
             "flex w-auto flex-col items-center justify-center rounded-xl p-10",
@@ -36,7 +41,7 @@ const Home: NextPage = () => {
           <PlaydexLogo />
           <h1 className="mt-8 text-2xl">Find out your Web 3.0 gaming score</h1>
           <div className="mt-6">
-            <ConnectWallet />
+            <ConnectKitButton />
           </div>
         </div>
       </div>

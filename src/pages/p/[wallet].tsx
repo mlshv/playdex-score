@@ -34,12 +34,12 @@ const ProfilePage = () => {
           <p className="mt-3 text-sm text-[#989DB3]">
             For now count ownership and transfer of NFTs in&nbsp;these Web 3.0
             games:
-            <ul className="mt-2">
-              {Object.values(tokenContracts).map((contract) => (
-                <li key={contract.address}>- {contract.name}</li>
-              ))}
-            </ul>
           </p>
+          <ul className="mt-2 text-sm text-[#989DB3]">
+            {Object.values(tokenContracts).map((contract) => (
+              <li key={contract.address}>- {contract.name}</li>
+            ))}
+          </ul>
         </div>
       );
     }
@@ -74,7 +74,7 @@ const ProfilePage = () => {
                     >
                       <div className="flex items-center gap-3">
                         {metadata?.image && (
-                          <div className="aspect-square h-10 w-10 rounded-lg overflow-hidden bg-[#1D1C2D]">
+                          <div className="aspect-square h-10 w-10 overflow-hidden rounded-lg bg-[#1D1C2D]">
                             <img
                               src={metadata.image}
                               alt={metadata.name}

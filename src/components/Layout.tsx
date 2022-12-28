@@ -6,7 +6,7 @@ interface Props {
 
 export function Layout({ children }: Props) {
   return (
-    <div className="relative mx-auto min-h-screen max-w-[1000px] overflow-hidden px-2 pt-4 pb-8 md:px-8">
+    <div className="relative mx-auto min-h-screen max-w-[1000px] overflow-hidden px-2 pt-4 pb-12 md:px-8">
       <img
         src="/bg1440x900.svg"
         alt=""
